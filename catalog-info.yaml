@@ -1,0 +1,68 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: toofics-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: toofics-poi-gateway-app-dev
+    backstage.io/kubernetes-id: toofics-poi-gateway-app
+    backstage.io/kubernetes-namespace: toofics
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rhdh-vegas/toofics-gateway
+    janus-idp.io/tekton-enabled: 'true'
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.rosa-bvg5j.wov7.p1.openshiftapps.com/dev-pipelines/ns/toofics/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.rosa-bvg5j.wov7.p1.openshiftapps.com/k8s/ns/toofics/deployments/toofics-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.rosa-bvg5j.wov7.p1.openshiftapps.com/#https://github.com/rhdh-vegas/toofics-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/toofics"
+  system: workshop-system-toofics
+  providesApis:
+    - gateway-api-toofics
+  consumesApis:
+    - backend-api-toofics
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-toofics
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/toofics"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-toofics
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://toofics-poi-gateway-app-toofics.apps.rosa-bvg5j.wov7.p1.openshiftapps.com/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rhdh-vegas/toofics-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/toofics"
+  system: workshop-system-toofics
+  definition:
+    $text: https://github.com/rhdh-vegas/toofics-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
